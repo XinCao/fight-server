@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+">
+    <bean id="systemConfigProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations">
+            <list>
+                <value>file:config/defaults.conf</value>
+            </list>
+        </property>
+        <property name="ignoreResourceNotFound" value="true" />
+    </bean>
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="properties" ref="systemConfigProperties" />
+    </bean>
+    <bean id="fightingPool" class="fight.server.thread.ThreadPool">
+        <constructor-arg>
+            <value>3</value>
+        </constructor-arg>
+        <constructor-arg>
+            <value>50</value>
+        </constructor-arg>
+        <constructor-arg>
+            <value>fighter thread pool</value>
+        </constructor-arg>
+    </bean>
+    <bean id="fighterService" class="fight.server.service.FighterService" depends-on="fighterDAO">
+        <property name="fighterDAO" ref="fighterDAO"/>
+    </bean>
+    <import resource="dao.xml"/>
+    <import resource="fight_script.xml"/>
+</beans>

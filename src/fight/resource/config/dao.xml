@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+">
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName">
+            <value>${database.driver}</value>
+        </property>
+        <property name="url">
+            <value>jdbc:mysql://${database.host}:${database.port}/${database.name}?${database.opts}</value>
+        </property>
+        <property name="username">
+            <value>${database.user}</value>
+        </property>
+        <property name="password">
+            <value>${database.pass}</value>
+        </property>
+    </bean>
+    <bean id="fighterDAO" class="fight.server.dao.FighterDAO">
+        <property name="dataSource">
+            <ref bean="dataSource"/>
+        </property>
+    </bean>
+</beans>
