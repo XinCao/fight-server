@@ -21,7 +21,7 @@
             <value>3</value>
         </constructor-arg>
         <constructor-arg>
-            <value>50</value>
+            <value>25</value>
         </constructor-arg>
         <constructor-arg>
             <value>fighter thread pool</value>
@@ -30,6 +30,8 @@
     <bean id="fighterService" class="fight.server.service.FighterService" depends-on="fighterDAO">
         <property name="fighterDAO" ref="fighterDAO"/>
     </bean>
+    <bean class="fight.server.service.AC"/>
+    <bean id="singleArenaManager" class="fight.server.thread.SingleArenaManager" init-method="start"/>
     <import resource="dao.xml"/>
     <import resource="fight_script.xml"/>
 </beans>

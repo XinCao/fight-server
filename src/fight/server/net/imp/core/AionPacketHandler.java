@@ -3,6 +3,7 @@ package fight.server.net.imp.core;
 import fight.server.net.imp.core.AionConnection.State;
 import fight.server.net.imp.packet.client.AionClientPacket;
 import fight.server.net.imp.packet.client.CLIENT_TEST;
+import fight.server.net.imp.packet.client.SINGLE_ARENA_PK;
 import fight.server.net.imp.packet.server.AionServerPacket;
 import fight.server.net.imp.packet.server.SERVER_TEST;
 import java.lang.reflect.Constructor;
@@ -18,7 +19,8 @@ public class AionPacketHandler {
 
     public enum AionClientKind {
 
-        CLIENT_TEST(0x0001, CLIENT_TEST.class, State.CONNECTED)
+        CLIENT_TEST(0x0001, CLIENT_TEST.class, State.CONNECTED),
+        SINGLE_ARENA_PK_REQUEST(0x0002, SINGLE_ARENA_PK.class, State.CONNECTED)
         ;
         public static final Map<Integer, AionClientKind> authedLoginAionClientKindMap = new HashMap<Integer, AionClientKind>();
         public static final Map<Integer, AionClientKind> connectedAionClientKindMap = new HashMap<Integer, AionClientKind>();

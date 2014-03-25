@@ -29,6 +29,7 @@ public class Fighter implements Comparable<Fighter>, Cloneable {
     private Map<Integer, Integer> m = new HashMap<Integer, Integer>();
     private Fighter targetFigher;
     private boolean isAutoFight = false;
+    private boolean isOneAction = false;
 
     public Fighter(String name) {
         this.name = name;
@@ -152,12 +153,20 @@ public class Fighter implements Comparable<Fighter>, Cloneable {
         this.targetFigher = targetFigher;
     }
 
-    public boolean isIsAutoFight() {
+    public boolean isAutoFight() {
         return isAutoFight;
     }
 
-    public void setIsAutoFight(boolean isAutoFight) {
+    public void autoFight(boolean isAutoFight) {
         this.isAutoFight = isAutoFight;
+    }
+
+    public boolean isOneAction() {
+        return isOneAction;
+    }
+
+    public void oneAction(boolean isOneAction) {
+        this.isOneAction = isOneAction;
     }
 
     @Override

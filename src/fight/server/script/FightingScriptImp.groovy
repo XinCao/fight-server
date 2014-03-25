@@ -3,8 +3,8 @@ package fight.server.script;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import fight.server.model.FightEffect;
-import fight.server.model.FightProperty;
+import fight.server.model.constant.FightEffect;
+import fight.server.model.constant.FightProperty;
 
 /**
  * fighterA 为估计者， fighterB为被攻击对象

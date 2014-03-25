@@ -11,7 +11,7 @@ import org.springframework.context.ApplicationContext;
 
 public abstract class AionClientPacket extends BaseClientPacket<AionConnection> {
 
-    private static final Logger log = Logger.getLogger(AionClientPacket.class);
+    protected final Logger log = Logger.getLogger(this.getClass());
     protected static final ApplicationContext ac = AC.getAC();
 
     protected AionClientPacket(ByteBuffer buf, AionConnection client, int opcode) {
@@ -24,7 +24,7 @@ public abstract class AionClientPacket extends BaseClientPacket<AionConnection> 
         try {
             this.runImpl();
         } catch (Throwable e) {
-            log.error("error handling client opcode = {} message" + getConnection().getIP());
+            log.error("error handling client opcode = { " + getOpcode() + " } message " + getConnection().getIP());
         }
     }
 

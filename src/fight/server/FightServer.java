@@ -17,8 +17,6 @@ public class FightServer {
      */
     public static void main(String[] args) {
         ApplicationContext ac = new FileSystemXmlApplicationContext("./config/app.xml");
-//        FighterArena fighterArena = ac.getBean(FighterArena.class);
-//        fighterArena.towFighterPK("caoxin", "lijing");
         new DeadLockDetector(60, DeadLockDetector.RESTART).start(); // 检查死锁
         ThreadPoolManager.getInstance();
         IOServer.getInstance().connect();
