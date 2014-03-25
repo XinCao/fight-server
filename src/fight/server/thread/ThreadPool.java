@@ -121,7 +121,7 @@ public class ThreadPool<T extends ObjectLock & Runnable> {
 
     private final class CheckerTask implements Runnable {
 
-        private final int sleepTime = 60 * 1000; // 一分钟检测一次，这个值， 直接关系到，线程池中工作线程的个数，和对请求处理的敏捷程度(如果，对于高并发的需求则需要降低，以提高敏捷度)
+        private final int sleepTime = 30 * 1000; // 一分钟检测一次，这个值， 直接关系到，线程池中工作线程的个数，和对请求处理的敏捷程度(如果，对于高并发的需求则需要降低，以提高敏捷度)
         private int lastSize = 0;
 
         @Override

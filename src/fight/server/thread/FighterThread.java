@@ -20,12 +20,14 @@ public class FighterThread extends ObjectLock implements Runnable {
     private Fighter fighterB;
     private CooldownCollection cooldownCollection;
     private FightingScript fightingScript;
+    private SingleArenaManager singleArenaManager;
 
     public FighterThread(Fighter fighterA, Fighter fighterB, ApplicationContext ac) {
         this.fighterA = fighterA;
         this.fighterB = fighterB;
         this.cooldownCollection = fighterA.getCooldownCollection();
         this.fightingScript = (FightingScript) ac.getBean("fightingScript");
+        this.singleArenaManager = ac.getBean(SingleArenaManager.class);
         cooldownCollection.initCooldownCoolection();
     }
 
@@ -47,6 +49,7 @@ public class FighterThread extends ObjectLock implements Runnable {
                 cooldownCollection.setCoolDown(cooldownId);
                 if (fighterA.getLife() <= 0 || fighterB.getLife() <= 0) {
                     fighterA.isFighting = false;
+                    singleArenaManager.removeFighter(fighterA.getName());
                     if (fighterA.getLife() > 0) {
                         fighterA.status = Status.SUCCESS;
                     } else {

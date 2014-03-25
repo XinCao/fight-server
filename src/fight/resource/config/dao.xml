@@ -17,9 +17,5 @@
             <value>${database.pass}</value>
         </property>
     </bean>
-    <bean id="fighterDAO" class="fight.server.dao.FighterDAO">
-        <property name="dataSource">
-            <ref bean="dataSource"/>
-        </property>
-    </bean>
+    <bean id="fighterDAO" class="fight.server.dao.FighterDAO" autowire="byType"/>
 </beans>

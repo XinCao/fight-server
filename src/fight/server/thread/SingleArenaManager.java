@@ -20,6 +20,7 @@ public class SingleArenaManager implements Runnable {
     private final Lock lock = new ReentrantLock();
     private final Condition notEmpty = lock.newCondition();
     private final Map<String, FighterThread> fighterThreadSet = new FastMap<String, FighterThread>().shared();
+    private final Map<String, Fighter> fighterSet = new FastMap<String, Fighter>().shared();
     private ApplicationContext ac = AC.getAC();
     private ThreadPool<FighterThread> fightingPool = (ThreadPool<FighterThread>) ac.getBean("fightingPool");
     private FighterService fighterService = ac.getBean(FighterService.class);
@@ -75,6 +76,8 @@ public class SingleArenaManager implements Runnable {
         FighterThread fighterThreadHe = new FighterThread(fighterHe, fighterMe, ac);
         fighterThreadSet.put(nameMe, fighterThreadMe);
         fighterThreadSet.put(nameHe, fighterThreadHe);
+        fighterSet.put(nameMe, fighterMe);
+        fighterSet.put(nameHe, fighterHe);
         fighterMe.isFighting = true;
         fighterHe.isFighting = true;
         notEmpty.signal();
@@ -82,10 +85,16 @@ public class SingleArenaManager implements Runnable {
     }
 
     private boolean canJoin(String name) {
-        if (fighterThreadSet.containsKey(name)) {
+        if (fighterSet.containsKey(name)) {
             return false;
         }
         return true;
+    }
+
+    public void removeFighter(String name) {
+        if (fighterSet.containsKey(name)) {
+            fighterSet.remove(name);
+        }
     }
 
     public static enum JoinResult {
