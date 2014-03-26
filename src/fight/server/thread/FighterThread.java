@@ -33,7 +33,6 @@ public class FighterThread extends ObjectLock implements Runnable {
         fighterA.isFighting = true;
         onceAction();
         logger.info(fighterA.toString());
-        fighterA.getCooldownCollection().setCoolDown(cooldownId);
         if (fighterA.getLife() <= 0 || fighterB.getLife() <= 0) {
             singleArenaManager.removeFighter(fighterA.getName());
             if (fighterA.getLife() > 0) {

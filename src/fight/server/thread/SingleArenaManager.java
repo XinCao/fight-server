@@ -48,6 +48,7 @@ public class SingleArenaManager implements Runnable {
                             if (f.getCooldownCollection().inCoolDown(cooldownId)) {
                                 continue;
                             }
+                            f.getCooldownCollection().setCoolDown(cooldownId);
                             if (!f.isAutoFight() && !f.isOneAction()) {
                                 f.autoFight(true);
                             }
@@ -109,15 +110,11 @@ public class SingleArenaManager implements Runnable {
     }
 
     public void removeFighter(String name) {
-        synchronized(fighterSet) {
-            if (fighterSet.containsKey(name)) {
-                fighterSet.remove(name);
-            }
+        if (fighterSet.containsKey(name)) {
+            fighterSet.remove(name);
         }
-        synchronized(fighterThreadSet) {
-            if (fighterThreadSet.containsKey(name)) {
-                fighterThreadSet.remove(name);
-            }
+        if (fighterThreadSet.containsKey(name)) {
+            fighterThreadSet.remove(name);
         }
     }
 
