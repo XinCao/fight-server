@@ -7,11 +7,11 @@ import java.nio.ByteBuffer;
  *
  * @author caoxin
  */
-public class CLIENT_TEST extends AionClientPacket{
+public class CM_TEST extends AionClientPacket{
     
     private String name;
 
-    public CLIENT_TEST(ByteBuffer buf, AionConnection client, Integer opcode) {
+    public CM_TEST(ByteBuffer buf, AionConnection client, Integer opcode) {
         super(buf, client, opcode);
     }
 

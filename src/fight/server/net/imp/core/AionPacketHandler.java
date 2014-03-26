@@ -2,10 +2,11 @@ package fight.server.net.imp.core;
 
 import fight.server.net.imp.core.AionConnection.State;
 import fight.server.net.imp.packet.client.AionClientPacket;
-import fight.server.net.imp.packet.client.CLIENT_TEST;
-import fight.server.net.imp.packet.client.SINGLE_ARENA_PK;
+import fight.server.net.imp.packet.client.CM_TEST;
+import fight.server.net.imp.packet.client.CM_SINGLE_ARENA_PK;
 import fight.server.net.imp.packet.server.AionServerPacket;
-import fight.server.net.imp.packet.server.SERVER_TEST;
+import fight.server.net.imp.packet.server.SM_PROMPT_INFORMATION;
+import fight.server.net.imp.packet.server.SM_TEST;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import org.apache.log4j.Logger;
@@ -19,8 +20,8 @@ public class AionPacketHandler {
 
     public enum AionClientKind {
 
-        CLIENT_TEST(0x0001, CLIENT_TEST.class, State.CONNECTED),
-        SINGLE_ARENA_PK_REQUEST(0x0002, SINGLE_ARENA_PK.class, State.CONNECTED)
+        CLIENT_TEST(0x0001, CM_TEST.class, State.CONNECTED),
+        SINGLE_ARENA_PK_REQUEST(0x0002, CM_SINGLE_ARENA_PK.class, State.CONNECTED)
         ;
         public static final Map<Integer, AionClientKind> authedLoginAionClientKindMap = new HashMap<Integer, AionClientKind>();
         public static final Map<Integer, AionClientKind> connectedAionClientKindMap = new HashMap<Integer, AionClientKind>();
@@ -124,7 +125,8 @@ public class AionPacketHandler {
 
     public static enum AionServerKind {
 
-        SERVER_TEST(0x0002, SERVER_TEST.class, State.CONNECTED)
+        SERVER_TEST(0x0002, SM_TEST.class, State.CONNECTED),
+        SM_PROMPT_INFORMATION(0x0003, SM_PROMPT_INFORMATION.class, State.CONNECTED)
         ;
         private int opcode;
         private Class<AionServerPacket> clazz;
@@ -147,37 +149,5 @@ public class AionPacketHandler {
         public State getState() {
             return this.state;
         }
-    }
-
-    /**
-     * 获得服务器包
-     * 
-     * @param ask
-     * @param client
-     * @return 
-     */
-    public static AionServerPacket getServerPacketByASK(AionServerKind ask, AionConnection client) {
-        AionServerPacket msg = null;
-        State state = client.getState();
-        if (ask.getState() == state) {
-            try {
-                Class<AionServerPacket> clazz = ask.getClazz();
-                Constructor<AionServerPacket> constructor = clazz.getConstructor(Integer.class);
-                msg = constructor.newInstance(ask.getOpcode());
-            } catch (NoSuchMethodException ex) {
-                log.warn(ex);
-            } catch (SecurityException ex) {
-                log.warn(ex);
-            } catch (InstantiationException ex) {
-                log.warn(ex);
-            } catch (IllegalAccessException ex) {
-                log.warn(ex);
-            } catch (IllegalArgumentException ex) {
-                log.warn(ex);
-            } catch (InvocationTargetException ex) {
-                log.warn(ex);
-            }
-        }
-        return msg;
     }
 }

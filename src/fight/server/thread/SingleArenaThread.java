@@ -12,16 +12,16 @@ import org.springframework.context.ApplicationContext;
  *
  * @author caoxin
  */
-public class FighterThread extends ObjectLock implements Runnable {
+public class SingleArenaThread extends ObjectLock implements Runnable {
 
-    private Logger logger = LoggerFactory.getLogger(FighterThread.class);
+    private Logger logger = LoggerFactory.getLogger(SingleArenaThread.class);
     private Fighter fighterA;
     private Fighter fighterB;
     private FightingScript fightingScript;
     private SingleArenaManager singleArenaManager;
     private CooldownId cooldownId;
 
-    public FighterThread(Fighter fighterA, Fighter fighterB, ApplicationContext ac) {
+    public SingleArenaThread(Fighter fighterA, Fighter fighterB, ApplicationContext ac) {
         this.fighterA = fighterA;
         this.fighterB = fighterB;
         this.fightingScript = (FightingScript) ac.getBean("fightingScript");
@@ -48,7 +48,7 @@ public class FighterThread extends ObjectLock implements Runnable {
         if (cooldownId.equals(CooldownId.PHY_ATK)) {
             fightingScript.oncePhyAtk(fighterA.getFightPropertyCountAndValueMap(), fighterB.getFightPropertyCountAndValueMap());
         }
-        fighterA.setFightPropertyByMap();
+        fighterB.setFightPropertyByMap();
     }
 
     public CooldownId getCooldownId() {

@@ -21,10 +21,10 @@ public class SingleArenaManager implements Runnable {
 
     private final Lock lock = new ReentrantLock();
     private final Condition notEmpty = lock.newCondition();
-    private final Map<String, FighterThread> fighterThreadSet = new FastMap<String, FighterThread>().shared();
+    private final Map<String, SingleArenaThread> fighterThreadSet = new FastMap<String, SingleArenaThread>().shared();
     private final Map<String, Fighter> fighterSet = new FastMap<String, Fighter>().shared();
     private ApplicationContext ac = AC.getAC();
-    private ThreadPool<FighterThread> fightingPool = (ThreadPool<FighterThread>) ac.getBean("fightingPool");
+    private ThreadPool<SingleArenaThread> fightingPool = (ThreadPool<SingleArenaThread>) ac.getBean("fightingPool");
     private FighterService fighterService = ac.getBean(FighterService.class);
 
     public void start() {
@@ -52,7 +52,7 @@ public class SingleArenaManager implements Runnable {
                             if (!f.isAutoFight() && !f.isOneAction()) {
                                 f.autoFight(true);
                             }
-                            FighterThread fighterThread = fighterThreadSet.get(f.getName());
+                            SingleArenaThread fighterThread = fighterThreadSet.get(f.getName());
                             fighterThread.setCooldownId(cooldownId);
                             fightingPool.executeTask(fighterThread);
                         }
@@ -88,8 +88,8 @@ public class SingleArenaManager implements Runnable {
         if (fighterMe == null || fighterHe == null) {
             return false;
         }
-        FighterThread fighterThreadMe = new FighterThread(fighterMe, fighterHe, ac);
-        FighterThread fighterThreadHe = new FighterThread(fighterHe, fighterMe, ac);
+        SingleArenaThread fighterThreadMe = new SingleArenaThread(fighterMe, fighterHe, ac);
+        SingleArenaThread fighterThreadHe = new SingleArenaThread(fighterHe, fighterMe, ac);
         fighterThreadSet.put(nameMe, fighterThreadMe);
         fighterThreadSet.put(nameHe, fighterThreadHe);
         fighterSet.put(nameMe, fighterMe);
