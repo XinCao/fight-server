@@ -3,8 +3,10 @@ package fight.server.thread;
 import fight.server.model.Fighter;
 import fight.server.service.AC;
 import fight.server.service.FighterService;
+import fight.server.util.CooldownId;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -32,15 +34,28 @@ public class SingleArenaManager implements Runnable {
 
     @Override
     public void run() {
+        Set<Entry<String, Fighter>> s = fighterSet.entrySet();
         while (true) {
             lock.lock();
             try {
                 while (fighterThreadSet.isEmpty()) {
                     notEmpty.awaitUninterruptibly();
                 }
-                for (Entry<String, FighterThread> e : fighterThreadSet.entrySet()) {
-                    fightingPool.executeTask(e.getValue());
-                    fighterThreadSet.remove(e.getKey());
+                for (Entry<String, Fighter> e : s) {
+                    Fighter f = e.getValue();
+                    if (!f.isFighting) {
+                        for (CooldownId cooldownId : CooldownId.coolList) {
+                            if (f.getCooldownCollection().inCoolDown(cooldownId)) {
+                                continue;
+                            }
+                            if (!f.isAutoFight() && !f.isOneAction()) {
+                                f.autoFight(true);
+                            }
+                            FighterThread fighterThread = fighterThreadSet.get(f.getName());
+                            fighterThread.setCooldownId(cooldownId);
+                            fightingPool.executeTask(fighterThread);
+                        }
+                    }
                 }
             } finally {
                 lock.unlock();
@@ -78,8 +93,10 @@ public class SingleArenaManager implements Runnable {
         fighterThreadSet.put(nameHe, fighterThreadHe);
         fighterSet.put(nameMe, fighterMe);
         fighterSet.put(nameHe, fighterHe);
-        fighterMe.isFighting = true;
-        fighterHe.isFighting = true;
+        fighterMe.isFighting = false;
+        fighterHe.isFighting = false;
+        fighterMe.getCooldownCollection().initCooldownCoolection();
+        fighterHe.getCooldownCollection().initCooldownCoolection();
         notEmpty.signal();
         return true;
     }
@@ -92,8 +109,15 @@ public class SingleArenaManager implements Runnable {
     }
 
     public void removeFighter(String name) {
-        if (fighterSet.containsKey(name)) {
-            fighterSet.remove(name);
+        synchronized(fighterSet) {
+            if (fighterSet.containsKey(name)) {
+                fighterSet.remove(name);
+            }
+        }
+        synchronized(fighterThreadSet) {
+            if (fighterThreadSet.containsKey(name)) {
+                fighterThreadSet.remove(name);
+            }
         }
     }
 
@@ -102,8 +126,7 @@ public class SingleArenaManager implements Runnable {
         OK(1, "ok"),
         I_HAVE_JOINED(2, "I have join"),
         HE_HAVE_JOINED(3, "He have join"),
-        ERROR(4, "error fighter")
-        ;
+        ERROR(4, "error fighter");
         private int num;
         private String describe;
 

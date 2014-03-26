@@ -10,7 +10,7 @@ import java.util.List;
  */
 public enum CooldownId {
 
-    PHY_ATK(0, false, false, 1),;
+    PHY_ATK(0, false, false, 40),;
     public static final List<CooldownId> coolList = new ArrayList<CooldownId>();
 
     static {

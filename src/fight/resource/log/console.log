@@ -1,11 +1,11 @@
-[INFO 2014-03-25 14:53:41] org.springframework.context.support.FileSystemXmlApplicationContext:510 - Refreshing org.springframework.context.support.FileSystemXmlApplicationContext@24c4a3: startup date [Tue Mar 25 14:53:41 CST 2014]; root of context hierarchy
-[INFO 2014-03-25 14:53:41] org.springframework.beans.factory.xml.XmlBeanDefinitionReader:315 - Loading XML bean definitions from file [C:\Users\caoxin\Documents\GitHub\fight-server\src\fight\resource\.\config\app.xml]
-[INFO 2014-03-25 14:53:41] org.springframework.beans.factory.xml.XmlBeanDefinitionReader:315 - Loading XML bean definitions from file [C:\Users\caoxin\Documents\GitHub\fight-server\src\fight\resource\config\dao.xml]
-[INFO 2014-03-25 14:53:41] org.springframework.beans.factory.xml.XmlBeanDefinitionReader:315 - Loading XML bean definitions from file [C:\Users\caoxin\Documents\GitHub\fight-server\src\fight\resource\config\fight_script.xml]
-[INFO 2014-03-25 14:53:41] org.springframework.beans.factory.config.PropertiesFactoryBean:172 - Loading properties file from URL [file:config/defaults.conf]
-[INFO 2014-03-25 14:53:42] org.springframework.beans.factory.support.DefaultListableBeanFactory:596 - Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@156e5ed: defining beans [systemConfigProperties,org.springframework.beans.factory.config.PropertyPlaceholderConfigurer#0,fightingPool,fighterService,fight.server.service.AC#0,singleArenaManager,dataSource,fighterDAO,org.springframework.scripting.config.scriptFactoryPostProcessor,fightingScript]; root of factory hierarchy
-[INFO 2014-03-25 14:53:42] org.springframework.jdbc.datasource.DriverManagerDataSource:153 - Loaded JDBC driver: com.mysql.jdbc.Driver
-[INFO 2014-03-25 14:53:43] com.aionemu.commons.network.NioServer:41 - Server listening on IP: 127.0.0.1 Port 8888 for Aion Connections
-[INFO 2014-03-25 14:53:50] fight.server.net.imp.core.AionConnection:34 - connection from: 127.0.0.1
-[INFO 2014-03-25 14:53:56] fight.server.net.imp.core.AionConnection:42 - recived packet: [C] 0x02 SINGLE_ARENA_PK
-[INFO 2014-03-25 14:53:56] fight.server.net.imp.packet.client.SINGLE_ARENA_PK:46 - single arena join result is OK
+[INFO 2014-03-26 14:18:21] org.springframework.context.support.FileSystemXmlApplicationContext:510 - Refreshing org.springframework.context.support.FileSystemXmlApplicationContext@13f136e: startup date [Wed Mar 26 14:18:21 CST 2014]; root of context hierarchy
+[INFO 2014-03-26 14:18:21] org.springframework.beans.factory.xml.XmlBeanDefinitionReader:315 - Loading XML bean definitions from file [C:\Users\caoxin\Documents\GitHub\fight-server\src\fight\resource\.\config\app.xml]
+[INFO 2014-03-26 14:18:21] org.springframework.beans.factory.xml.XmlBeanDefinitionReader:315 - Loading XML bean definitions from file [C:\Users\caoxin\Documents\GitHub\fight-server\src\fight\resource\config\dao.xml]
+[INFO 2014-03-26 14:18:21] org.springframework.beans.factory.xml.XmlBeanDefinitionReader:315 - Loading XML bean definitions from file [C:\Users\caoxin\Documents\GitHub\fight-server\src\fight\resource\config\fight_script.xml]
+[INFO 2014-03-26 14:18:21] org.springframework.beans.factory.config.PropertiesFactoryBean:172 - Loading properties file from URL [file:config/defaults.conf]
+[INFO 2014-03-26 14:18:22] org.springframework.beans.factory.support.DefaultListableBeanFactory:596 - Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@159054d: defining beans [systemConfigProperties,org.springframework.beans.factory.config.PropertyPlaceholderConfigurer#0,fightingPool,fighterService,fight.server.service.AC#0,singleArenaManager,dataSource,fighterDAO,org.springframework.scripting.config.scriptFactoryPostProcessor,fightingScript]; root of factory hierarchy
+[INFO 2014-03-26 14:18:22] org.springframework.jdbc.datasource.DriverManagerDataSource:153 - Loaded JDBC driver: com.mysql.jdbc.Driver
+[INFO 2014-03-26 14:18:23] com.aionemu.commons.network.NioServer:41 - Server listening on IP: 127.0.0.1 Port 8888 for Aion Connections
+[INFO 2014-03-26 14:18:33] fight.server.net.imp.core.AionConnection:34 - connection from: 127.0.0.1
+[INFO 2014-03-26 14:18:40] fight.server.net.imp.core.AionConnection:42 - recived packet: [C] 0x02 SINGLE_ARENA_PK
+[INFO 2014-03-26 14:18:41] fight.server.net.imp.packet.client.SINGLE_ARENA_PK:46 - single arena join result is OK

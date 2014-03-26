@@ -75,40 +75,40 @@ public class SocketClient {
             while (true) {
                 try {
                     if ((outputStr = outBufferedReader.readLine()) != null) {
-                            int sizePosition = outputByteBuffer.position();
-                            outputByteBuffer.putShort((short) 0);
-                            outputByteBuffer.put((byte) opcode);
-                            String[] words = outputStr.split("\\s");
-                            int num = words.length;
-                            if (num % 2 != 0) {
-                                logger.info("Please check the incoming data!");
-                                continue;
-                            }
-                            for (int i = 0; i < num; i = i + 2) {
-                                if (isInt(words[i])) {
-                                    outputByteBuffer.putInt(new Integer(words[i + 1]));
-                                } else if (isShort(words[i])) {
-                                    outputByteBuffer.putShort(new Short(words[i + 1]));
-                                } else if (isString(words[i])) {
-                                    String s = words[i + 1];
-                                    for (int j = 0; j < s.length(); j++) {
-                                        outputByteBuffer.putChar(s.charAt(j));
-                                    }
-                                    outputByteBuffer.putChar('\000');
-                                }
-                            }
-                            int afterPosition = outputByteBuffer.position();
-                            outputByteBuffer.position(sizePosition);
-                            outputByteBuffer.putShort((short) (afterPosition - sizePosition));
-                            outputByteBuffer.position(afterPosition);
-                            outputByteBuffer.flip();
-                            if (outputByteBuffer.hasArray()) {
-                                byte[] b = Arrays.copyOfRange(outputByteBuffer.array(), sizePosition, afterPosition);
-                                outputStream.write(b);
-                                outputStream.flush();
-                            }
-                            outputByteBuffer.clear();
+                        int sizePosition = outputByteBuffer.position();
+                        outputByteBuffer.putShort((short) 0);
+                        outputByteBuffer.put((byte) opcode);
+                        String[] words = outputStr.split("\\s");
+                        int num = words.length;
+                        if (num % 2 != 0) {
+                            logger.info("Please check the incoming data!");
+                            continue;
                         }
+                        for (int i = 0; i < num; i = i + 2) {
+                            if (isInt(words[i])) {
+                                outputByteBuffer.putInt(new Integer(words[i + 1]));
+                            } else if (isShort(words[i])) {
+                                outputByteBuffer.putShort(new Short(words[i + 1]));
+                            } else if (isString(words[i])) {
+                                String s = words[i + 1];
+                                for (int j = 0; j < s.length(); j++) {
+                                    outputByteBuffer.putChar(s.charAt(j));
+                                }
+                                outputByteBuffer.putChar('\000');
+                            }
+                        }
+                        int afterPosition = outputByteBuffer.position();
+                        outputByteBuffer.position(sizePosition);
+                        outputByteBuffer.putShort((short) (afterPosition - sizePosition));
+                        outputByteBuffer.position(afterPosition);
+                        outputByteBuffer.flip();
+                        if (outputByteBuffer.hasArray()) {
+                            byte[] b = Arrays.copyOfRange(outputByteBuffer.array(), sizePosition, afterPosition);
+                            outputStream.write(b);
+                            outputStream.flush();
+                        }
+                        outputByteBuffer.clear();
+                    }
                 } catch (IOException ex) {
                     logger.debug(ex.getMessage());
                 }
