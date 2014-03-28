@@ -25,7 +25,8 @@ public class Fighter implements Comparable<Fighter>, Cloneable {
     private int hit;
     private int dodge;
     public Status status;
-    public boolean isFighting = false;
+    public boolean isFighting = false; // 正在战斗中
+    public boolean isFightingAndK = false; // 正在战斗中，且正在K对方
     private Map<Integer, Integer> m = new HashMap<Integer, Integer>();
     private Fighter targetFigher;
     private boolean isAutoFight = false;

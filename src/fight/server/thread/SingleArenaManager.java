@@ -1,6 +1,7 @@
 package fight.server.thread;
 
 import fight.server.model.Fighter;
+import fight.server.net.imp.core.AionConnection;
 import fight.server.service.AC;
 import fight.server.service.FighterService;
 import fight.server.util.CooldownId;
@@ -43,12 +44,11 @@ public class SingleArenaManager implements Runnable {
                 }
                 for (Entry<String, Fighter> e : s) {
                     Fighter f = e.getValue();
-                    if (!f.isFighting) {
+                    if (f.isFighting && f.getTargetFigher().isFighting && !f.isFightingAndK) {
                         for (CooldownId cooldownId : CooldownId.coolList) {
                             if (f.getCooldownCollection().inCoolDown(cooldownId)) {
                                 continue;
                             }
-                            f.getCooldownCollection().setCoolDown(cooldownId);
                             if (!f.isAutoFight() && !f.isOneAction()) {
                                 f.autoFight(true);
                             }
@@ -64,16 +64,33 @@ public class SingleArenaManager implements Runnable {
         }
     }
 
-    public JoinResult joinSingleArena(String nameMe, String nameHe) {
-        if (!canJoin(nameMe)) {
-            return JoinResult.I_HAVE_JOINED;
+    public boolean startFighting(String nameMe, String nameHe) {
+        Fighter fighterMe;
+        Fighter fighterHe;
+        if (fighterSet.containsKey(nameMe) && fighterSet.containsKey(nameHe)) {
+            fighterMe = fighterSet.get(nameMe);
+            fighterHe = fighterSet.get(nameHe);
+            fighterMe.setTargetFigher(fighterHe);
+            fighterMe.isFighting = true;
+        } else {
+            return false;
         }
-        if (!canJoin(nameHe)) {
-            return JoinResult.HE_HAVE_JOINED;
+        return true;
+    }
+
+    public void stopFighting(String name) {
+        if (fighterSet.containsKey(name)) {
+            fighterSet.get(name).isFighting = false;
+        }
+    }
+
+    public JoinResult joinSingleArena(String name, AionConnection client) {
+        if (!canJoin(name)) {
+            return JoinResult.I_HAVE_JOINED;
         }
         lock.lock();
         try {
-            if (!joinFighterThreadSet(nameMe, nameHe)) {
+            if (!joinFighterThreadSet(name, client)) {
                 return JoinResult.ERROR;
             }
         } finally {
@@ -82,22 +99,16 @@ public class SingleArenaManager implements Runnable {
         return JoinResult.OK;
     }
 
-    private boolean joinFighterThreadSet(String nameMe, String nameHe) {
-        Fighter fighterMe = fighterService.selectFighter(nameMe);
-        Fighter fighterHe = fighterService.selectFighter(nameHe);
-        if (fighterMe == null || fighterHe == null) {
+    private boolean joinFighterThreadSet(String name, AionConnection client) {
+        Fighter fighter = fighterService.selectFighter(name);
+        if (fighter == null) {
             return false;
         }
-        SingleArenaThread fighterThreadMe = new SingleArenaThread(fighterMe, fighterHe, ac);
-        SingleArenaThread fighterThreadHe = new SingleArenaThread(fighterHe, fighterMe, ac);
-        fighterThreadSet.put(nameMe, fighterThreadMe);
-        fighterThreadSet.put(nameHe, fighterThreadHe);
-        fighterSet.put(nameMe, fighterMe);
-        fighterSet.put(nameHe, fighterHe);
-        fighterMe.isFighting = false;
-        fighterHe.isFighting = false;
-        fighterMe.getCooldownCollection().initCooldownCoolection();
-        fighterHe.getCooldownCollection().initCooldownCoolection();
+        SingleArenaThread fighterThread = new SingleArenaThread(fighter, ac, client);
+        fighterThreadSet.put(name, fighterThread);
+        fighterSet.put(name, fighter);
+        fighter.isFightingAndK = false;
+        fighter.getCooldownCollection().initCooldownCoolection();
         notEmpty.signal();
         return true;
     }
@@ -139,5 +150,12 @@ public class SingleArenaManager implements Runnable {
         public String getDescribe() {
             return this.describe;
         }
+    }
+
+    public SingleArenaThread getSingleArenaThreadByName(String name) {
+        if (fighterThreadSet.containsKey(name)) {
+            return fighterThreadSet.get(name);
+        }
+        return null;
     }
 }

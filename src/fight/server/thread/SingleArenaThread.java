@@ -2,6 +2,9 @@ package fight.server.thread;
 
 import fight.server.model.Fighter;
 import fight.server.model.constant.Status;
+import fight.server.net.imp.core.AionConnection;
+import fight.server.net.imp.core.AionPacketHandler.AionServerKind;
+import fight.server.net.imp.packet.server.SM_FIGHT_INFO;
 import fight.server.script.FightingScript;
 import fight.server.util.CooldownId;
 import org.slf4j.Logger;
@@ -15,40 +18,42 @@ import org.springframework.context.ApplicationContext;
 public class SingleArenaThread extends ObjectLock implements Runnable {
 
     private Logger logger = LoggerFactory.getLogger(SingleArenaThread.class);
-    private Fighter fighterA;
-    private Fighter fighterB;
+    private Fighter fighter;
     private FightingScript fightingScript;
     private SingleArenaManager singleArenaManager;
     private CooldownId cooldownId;
+    private AionConnection client;
 
-    public SingleArenaThread(Fighter fighterA, Fighter fighterB, ApplicationContext ac) {
-        this.fighterA = fighterA;
-        this.fighterB = fighterB;
+    public SingleArenaThread(Fighter fighter, ApplicationContext ac, AionConnection client) {
+        this.fighter = fighter;
         this.fightingScript = (FightingScript) ac.getBean("fightingScript");
         this.singleArenaManager = ac.getBean(SingleArenaManager.class);
+        this.client = client;
     }
 
     @Override
     public void run() {
-        fighterA.isFighting = true;
+        fighter.isFightingAndK = true;
         onceAction();
-        logger.info(fighterA.toString());
-        if (fighterA.getLife() <= 0 || fighterB.getLife() <= 0) {
-            singleArenaManager.removeFighter(fighterA.getName());
-            if (fighterA.getLife() > 0) {
-                fighterA.status = Status.SUCCESS;
+        logger.info(fighter.toString());
+        client.sendPacket(new SM_FIGHT_INFO(AionServerKind.SM_FIGHT_INFO.getOpcode(), fighter, fighter.getTargetFigher()));
+        if (fighter.getLife() <= 0 || fighter.getTargetFigher().getLife() <= 0) { // 战斗结束时
+            singleArenaManager.removeFighter(fighter.getName());
+            if (fighter.getLife() > 0) {
+                fighter.status = Status.SUCCESS;
             } else {
-                fighterA.status = Status.FAILURE;
+                fighter.status = Status.FAILURE;
             }
         }
-        fighterA.isFighting = false;
+        fighter.getCooldownCollection().setCoolDown(cooldownId);
+        fighter.isFightingAndK = false;
     }
 
     private void onceAction() {
         if (cooldownId.equals(CooldownId.PHY_ATK)) {
-            fightingScript.oncePhyAtk(fighterA.getFightPropertyCountAndValueMap(), fighterB.getFightPropertyCountAndValueMap());
+            fightingScript.oncePhyAtk(fighter.getFightPropertyCountAndValueMap(), fighter.getTargetFigher().getFightPropertyCountAndValueMap());
         }
-        fighterB.setFightPropertyByMap();
+        fighter.getTargetFigher().setFightPropertyByMap();
     }
 
     public CooldownId getCooldownId() {

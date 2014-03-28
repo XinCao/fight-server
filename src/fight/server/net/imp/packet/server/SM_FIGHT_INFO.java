@@ -23,7 +23,6 @@ public class SM_FIGHT_INFO extends AionServerPacket {
     protected void writeImpl(AionConnection con, ByteBuffer buf) {
         this.writeS(buf, fighter.getName());
         this.writeD(buf, fighter.getLife());
-        
         this.writeS(buf, targetFighter.getName());
         this.writeD(buf, targetFighter.getLife());
     }

@@ -3,6 +3,7 @@ package fight.server.net.imp.core;
 import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.Dispatcher;
 import com.aionemu.commons.network.PacketProcessor;
+import fight.server.model.Fighter;
 import fight.server.net.imp.packet.client.AionClientPacket;
 import fight.server.net.imp.packet.server.AionServerPacket;
 import org.apache.log4j.Logger;

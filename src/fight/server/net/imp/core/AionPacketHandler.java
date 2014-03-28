@@ -3,8 +3,10 @@ package fight.server.net.imp.core;
 import fight.server.net.imp.core.AionConnection.State;
 import fight.server.net.imp.packet.client.AionClientPacket;
 import fight.server.net.imp.packet.client.CM_TEST;
-import fight.server.net.imp.packet.client.CM_SINGLE_ARENA_PK;
+import fight.server.net.imp.packet.client.CM_SINGLE_ARENA_PK_REQUEST;
+import fight.server.net.imp.packet.client.CM_SINGLE_ARENA_PK_START;
 import fight.server.net.imp.packet.server.AionServerPacket;
+import fight.server.net.imp.packet.server.SM_FIGHT_INFO;
 import fight.server.net.imp.packet.server.SM_PROMPT_INFORMATION;
 import fight.server.net.imp.packet.server.SM_TEST;
 import java.lang.reflect.Constructor;
@@ -21,7 +23,8 @@ public class AionPacketHandler {
     public enum AionClientKind {
 
         CLIENT_TEST(0x0001, CM_TEST.class, State.CONNECTED),
-        SINGLE_ARENA_PK_REQUEST(0x0002, CM_SINGLE_ARENA_PK.class, State.CONNECTED)
+        SINGLE_ARENA_PK_REQUEST(0x0002, CM_SINGLE_ARENA_PK_REQUEST.class, State.CONNECTED),
+        CM_SINGLE_ARENA_PK_START(0x0003, CM_SINGLE_ARENA_PK_START.class, State.CONNECTED)
         ;
         public static final Map<Integer, AionClientKind> authedLoginAionClientKindMap = new HashMap<Integer, AionClientKind>();
         public static final Map<Integer, AionClientKind> connectedAionClientKindMap = new HashMap<Integer, AionClientKind>();
@@ -125,8 +128,9 @@ public class AionPacketHandler {
 
     public static enum AionServerKind {
 
-        SERVER_TEST(0x0002, SM_TEST.class, State.CONNECTED),
-        SM_PROMPT_INFORMATION(0x0003, SM_PROMPT_INFORMATION.class, State.CONNECTED)
+        SERVER_TEST(0x0001, SM_TEST.class, State.CONNECTED),
+        SM_PROMPT_INFORMATION(0x0002, SM_PROMPT_INFORMATION.class, State.CONNECTED),
+        SM_FIGHT_INFO(0x0003, SM_FIGHT_INFO.class, State.CONNECTED)
         ;
         private int opcode;
         private Class<AionServerPacket> clazz;
