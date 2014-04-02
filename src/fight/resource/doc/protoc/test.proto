@@ -1,0 +1,10 @@
+package protoc;
+
+option java_package = "fight.server.protoc";
+option java_outer_classname = "Test";
+
+message Persion {
+  required int32 id = 1;
+  required string name = 2;
+  optional string email = 3;
+}
